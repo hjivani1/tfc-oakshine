@@ -1,5 +1,4 @@
 name: TFLint
-
 on:
   push:
     branches:
@@ -15,19 +14,15 @@ on:
 
 jobs:
   tflint:
-    name: Run TFLint
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Install TFLint
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-      - name: Initialize TFLint (downloads plugins)
-        run: tflint --init
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: latest # Or specify a specific version like 'v0.50.0'
 
       - name: Run TFLint
-        run: tflint --format=compact
+        run: tflint --init && tflint
