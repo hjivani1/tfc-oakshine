@@ -1,9 +1,9 @@
 name: Terraform Plan Only
 
-on:
-  push:
-    branches:
-      - main  # Run plan only on main branch pushes
+on: [push]
+  #push:
+    #branches:
+      #- main  # Run plan only on main branch pushes
 
 jobs:
   terraform:
@@ -34,6 +34,13 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+      
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint
+        run: tflint --init && tflint
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
