@@ -1,0 +1,33 @@
+name: TFLint
+
+on:
+  push:
+    branches:
+      - '**'         # Match all branches
+    paths:
+      - '**/*.tf'    # Only trigger if Terraform files change
+
+  pull_request:
+    branches:
+      - '**'         # All PRs, from any branch
+    paths:
+      - '**/*.tf'
+
+jobs:
+  tflint:
+    name: Run TFLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Initialize TFLint (downloads plugins)
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format=compact
